@@ -1,0 +1,39 @@
+{
+    "name": "Backend-dev",
+    "dockerComposeFile": "../../docker-compose.yml",
+    "service": "backend-dev",
+    "runServices": [
+        "backend-dev"
+    ],
+    "initializeCommand": "./../setup_env.sh",
+    "workspaceFolder": "/workspace/backend",
+    "shutdownAction": "stopCompose",
+    "overrideCommand": true,
+    "postStartCommand": "zsh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "Codeium.codeium",
+                "jasew.vscode-helix-emulation"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.insertSpaces": true,
+                "editor.rulers": [
+                    100
+                ],
+                "editor.tabSize": 4,
+                "editor.lineNumbers": "relative",
+                "editor.inlayHints.enabled": "on",
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports": "always"
+                },
+                "files.insertFinalNewline": true,
+                "files.trimFinalNewlines": true,
+                "files.trimTrailingWhitespace": true,
+                "terminal.integrated.defaultProfile.linux": "zsh"
+            }
+        }
+    }
+}
