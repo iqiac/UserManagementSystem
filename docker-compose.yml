@@ -1,4 +1,23 @@
 services:
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      target: dev
+      args:
+        - USER=${USER}
+        - UID=${UID}
+    env_file: .env
+    container_name: frontend-dev
+    image: frontend-dev:latest
+    volumes:
+      - .:/workspace
+      - ~/.ssh:${HOME}/.ssh
+    ports:
+      - 4200:4200
+    networks:
+      - user-management-system
+
   backend-dev:
     build:
       context: ./backend

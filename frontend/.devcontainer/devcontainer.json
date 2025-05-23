@@ -1,0 +1,39 @@
+{
+    "name": "Frontend-dev",
+    "dockerComposeFile": "../../docker-compose.yml",
+    "service": "frontend-dev",
+    "runServices": [
+        "frontend-dev"
+    ],
+    "initializeCommand": "./../setup_env.sh",
+    "workspaceFolder": "/workspace/frontend",
+    "shutdownAction": "stopCompose",
+    "overrideCommand": true,
+    "postStartCommand": "zsh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "johnpapa.angular-essentials",
+                "Codeium.codeium",
+                "jasew.vscode-helix-emulation"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.insertSpaces": true,
+                "editor.rulers": [
+                    80
+                ],
+                "editor.tabSize": 4,
+                "editor.lineNumbers": "relative",
+                "editor.inlayHints.enabled": "on",
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports": "always"
+                },
+                "files.insertFinalNewline": true,
+                "files.trimFinalNewlines": true,
+                "files.trimTrailingWhitespace": true,
+                "terminal.integrated.defaultProfile.linux": "zsh"
+            }
+        }
+    }
+}
