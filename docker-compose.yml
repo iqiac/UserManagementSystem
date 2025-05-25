@@ -9,12 +9,26 @@ services:
         - UID=${UID}
     env_file: .env
     container_name: frontend-dev
+    profiles: ["develop"]
     image: frontend-dev:latest
     volumes:
       - .:/workspace
       - ~/.ssh:${HOME}/.ssh
     ports:
       - 4200:4200
+    networks:
+      - user-management-system
+  
+  frontend-run:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      target: run
+    container_name: frontend-run
+    profiles: ["deploy"]
+    restart: unless-stopped
+    ports:
+      - 8081:80
     networks:
       - user-management-system
 
@@ -28,6 +42,7 @@ services:
         - UID=${UID}
     env_file: .env
     container_name: backend-dev
+    profiles: ["develop"]
     image: backend-dev:latest
     volumes:
       - .:/workspace
@@ -44,6 +59,7 @@ services:
       target: run
     container_name: backend-run
     image: backend-run:latest
+    profiles: ["deploy"]
     restart: unless-stopped
     depends_on:
       - database
@@ -55,6 +71,7 @@ services:
   database:
     image: mysql:latest
     container_name: database
+    profiles: ["deploy", "develop"]
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=root

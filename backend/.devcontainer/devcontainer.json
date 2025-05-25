@@ -3,7 +3,7 @@
     "dockerComposeFile": "../../docker-compose.yml",
     "service": "backend-dev",
     "runServices": [
-        "backend-dev"
+       "database", "backend-dev", "frontend-run"
     ],
     "initializeCommand": "./../setup_env.sh",
     "workspaceFolder": "/workspace/backend",

@@ -1,17 +1,21 @@
 #===================================================================================================
-FROM fedora:latest AS build
+FROM fedora:latest AS base
 
 # Install dependencies
 RUN dnf upgrade -y && dnf install -y \
-    java-21-openjdk-devel \
     maven \
+    java-21-openjdk-devel \
     && dnf clean all
+
+#===================================================================================================
+FROM base AS build
 
 COPY . /app
 WORKDIR /app
 
 RUN mvn clean package -DskipTests
 
+#===================================================================================================
 FROM fedora:latest AS run
 
 # Install dependencies
@@ -24,7 +28,7 @@ COPY --from=build /app/target/*.jar /app.jar
 CMD [ "java", "-jar", "/app.jar" ]
 
 #===================================================================================================
-FROM build AS dev
+FROM base AS dev
 
 # Arguments
 ARG USER

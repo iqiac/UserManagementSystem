@@ -1,16 +1,36 @@
 #===================================================================================================
-FROM fedora:latest AS build
+FROM fedora:latest AS base
 
 # Install dependencies
 RUN dnf upgrade -y && dnf install -y \
     nodejs \
     && dnf clean all
-
+    
 # Install angular CLI
 RUN npm install -g @angular/cli
 
 #===================================================================================================
-FROM build AS dev
+FROM base AS build
+
+COPY . /app
+WORKDIR /app
+
+# Build Angular app
+RUN npm install
+RUN ng build --configuration production
+
+#===================================================================================================
+FROM nginx:alpine AS run
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/dist/user-management-system/browser /usr/share/nginx/html
+RUN chmod -R 755 /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
+
+#===================================================================================================
+FROM base AS dev
 
 # Arguments
 ARG USER

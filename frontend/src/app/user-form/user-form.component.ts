@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from '../user';
 import { UserService } from '../user.service';
 
@@ -12,14 +12,9 @@ import { UserService } from '../user.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent {
-  user: User = {
-    id: 0,
-    name: '',
-    email: '',
-  };
+  user = { id: undefined, name: '', email: '' };
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private userService: UserService
   ) {
