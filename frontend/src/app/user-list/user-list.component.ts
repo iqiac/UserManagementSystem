@@ -11,12 +11,20 @@ import { UserService } from '../user.service';
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
+
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((data: User[]) => {
-      console.log(data);
-      this.users = data;
-    });
+    this.getUsers();
+  }
+
+  deleteUser(id?: number): void {
+    this.userService.deleteUser(id).subscribe(() => this.getUsers());
+  }
+
+  private getUsers(): void {
+    this.userService
+      .getUsers()
+      .subscribe((data: User[]) => (this.users = data));
   }
 }

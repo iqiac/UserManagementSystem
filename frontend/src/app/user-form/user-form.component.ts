@@ -12,12 +12,9 @@ import { UserService } from '../user.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent {
-  user = { id: undefined, name: '', email: '' };
+  user: User = { id: undefined, name: '', email: '' };
 
-  constructor(
-    private router: Router,
-    private userService: UserService
-  ) {
+  constructor(private router: Router, private userService: UserService) {
     this.user = new User();
   }
 
