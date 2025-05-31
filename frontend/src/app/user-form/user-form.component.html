@@ -2,7 +2,7 @@
   <div class="card-body">
     <form (ngSubmit)="onSubmit()" #userForm="ngForm">
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">Name*</label>
         <input
           type="text"
           [(ngModel)]="user.name"
@@ -14,11 +14,11 @@
           #name="ngModel"
         />
       </div>
-      <div [hidden]="!name.pristine" class="alert alert-danger">
-        Name is required
-      </div>
+      @if (name.invalid && (name.dirty || name.touched)) {
+      <div class="alert alert-danger">Name is required</div>
+      }
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Email*</label>
         <input
           type="text"
           [(ngModel)]="user.email"
@@ -27,12 +27,18 @@
           name="email"
           placeholder="Enter your email address"
           required
+          pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
           #email="ngModel"
         />
       </div>
-      <div [hidden]="!name.pristine" class="alert alert-danger">
-        Email is required
+      @if (email.invalid && (email.dirty || email.touched)) {
+      <div class="alert alert-danger">
+        <div *ngIf="email.errors?.['required']">Email is required</div>
+        <div *ngIf="email.errors?.['pattern']">
+          Please enter a valid email address (e.g. henry{{ "@" }}skalitz.com)
+        </div>
       </div>
+      }
       <button
         type="submit"
         [disabled]="!userForm.form.valid"

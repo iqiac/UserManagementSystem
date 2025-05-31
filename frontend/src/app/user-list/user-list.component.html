@@ -10,7 +10,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        @for(user of users; track user.id) {
+        <tr>
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>
@@ -22,6 +23,7 @@
             </button>
           </td>
         </tr>
+        }
       </tbody>
     </table>
   </div>

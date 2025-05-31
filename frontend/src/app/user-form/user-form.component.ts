@@ -18,13 +18,13 @@ export class UserFormComponent {
     this.user = new User();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.userService
       .createUser(this.user)
       .subscribe((result) => this.gotoUserList());
   }
 
-  gotoUserList() {
+  gotoUserList(): void {
     this.router.navigate(['/users']);
   }
 }
