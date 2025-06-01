@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../user';
 import { UserService } from '../user.service';
 
@@ -11,17 +11,40 @@ import { UserService } from '../user.service';
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css'],
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
   user: User = { id: undefined, name: '', email: '' };
+  isEditMode: boolean = false;
 
-  constructor(private router: Router, private userService: UserService) {
-    this.user = new User();
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserService
+  ) {}
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.userService.getUser(+id).subscribe((user) => {
+        this.user = user;
+      });
+    }
   }
 
   onSubmit(): void {
-    this.userService
-      .createUser(this.user)
-      .subscribe((result) => this.gotoUserList());
+    if (this.isEditMode) {
+      this.userService
+        .updateUser(this.user)
+        .subscribe(() => this.gotoUserList());
+    } else {
+      this.userService
+        .createUser(this.user)
+        .subscribe(() => this.gotoUserList());
+    }
+  }
+
+  onCancel(): void {
+    this.gotoUserList();
   }
 
   gotoUserList(): void {
