@@ -2,34 +2,45 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
+import { User } from '../user';
 import { UserService } from '../user.service';
 import { UserFormComponent } from './user-form.component';
 
 describe('UserFormComponent', () => {
   let component: UserFormComponent;
   let fixture: ComponentFixture<UserFormComponent>;
-  let mockUserService: any;
-  let mockRouter: any;
-  let mockActivatedRoute: any;
+  let mockUserService: jasmine.SpyObj<UserService>;
+  let mockRouter: jasmine.SpyObj<Router>;
+  let mockActivatedRoute: {
+    snapshot: {
+      paramMap: {
+        get: jasmine.Spy<(name: string) => string | null>;
+      };
+    };
+  };
+  let mockParamMapGet: jasmine.Spy<(name: string) => string | null>;
 
   beforeEach(async () => {
-    mockUserService = {
-      getUser: jasmine.createSpy('getUser').and.returnValue(
-        of({
-          id: 1,
-          name: 'Test User',
-          email: 'test@example.com',
-        })
-      ),
-      createUser: jasmine.createSpy('createUser').and.returnValue(of({})),
-      updateUser: jasmine.createSpy('updateUser').and.returnValue(of({})),
+    const exampleUser: User = {
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com',
     };
-    mockRouter = {
-      navigate: jasmine.createSpy('navigate'),
-    };
+    mockUserService = jasmine.createSpyObj('UserService', [
+      'getUser',
+      'createUser',
+      'updateUser',
+    ]);
+    mockUserService.getUser.and.returnValue(of(exampleUser));
+    mockUserService.createUser.and.returnValue(of(exampleUser));
+    mockUserService.updateUser.and.returnValue(of(exampleUser));
+
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+
+    mockParamMapGet = jasmine.createSpy('get').and.returnValue(null);
     mockActivatedRoute = {
       snapshot: {
-        paramMap: { get: jasmine.createSpy('get') },
+        paramMap: { get: mockParamMapGet },
       },
     };
 
@@ -52,7 +63,7 @@ describe('UserFormComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set isEditMode to true and load user data when id is present', () => {
-      mockActivatedRoute.snapshot.paramMap.get.and.returnValue('1');
+      mockParamMapGet.and.returnValue('1');
 
       component.ngOnInit();
 
@@ -66,7 +77,7 @@ describe('UserFormComponent', () => {
     });
 
     it('should not set isEditMode and load user if id does not exist', () => {
-      mockActivatedRoute.snapshot.paramMap.get.and.returnValue(null);
+      mockParamMapGet.and.returnValue(null);
 
       component.ngOnInit();
 

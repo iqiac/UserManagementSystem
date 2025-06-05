@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
   selector: 'app-root',
   imports: [RouterModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title: string = 'User Management System';
+  title = 'User Management System';
 }

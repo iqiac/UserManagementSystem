@@ -13,7 +13,7 @@ import { UserService } from '../user.service';
 })
 export class UserFormComponent implements OnInit {
   user: User = { id: undefined, name: '', email: '' };
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   constructor(
     private route: ActivatedRoute,
