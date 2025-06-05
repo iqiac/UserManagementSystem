@@ -9,8 +9,8 @@ import { UserListComponent } from './user-list.component';
 describe('UserComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
-  let mockUserService: any;
-  let mockRouter: any;
+  let mockUserService: jasmine.SpyObj<UserService>;
+  let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     mockUserService = jasmine.createSpyObj('UserService', [
@@ -57,7 +57,7 @@ describe('UserComponent', () => {
         { id: 1, name: 'Henry', email: 'henry@skalitz.com' },
         { id: 2, name: 'Radzig', email: 'radzig@skalitz.com' },
       ];
-      mockUserService.deleteUser.and.returnValue(of(null));
+      mockUserService.deleteUser.and.returnValue(of(undefined));
       mockUserService.getUsers.and.returnValue(of(usersMock));
 
       component.deleteUser(3);
@@ -68,7 +68,7 @@ describe('UserComponent', () => {
     });
 
     it('should handle undefined id gracefully', () => {
-      mockUserService.deleteUser.and.returnValue(of(null));
+      mockUserService.deleteUser.and.returnValue(of(undefined));
       mockUserService.getUsers.and.returnValue(of([]));
 
       component.deleteUser(undefined);
