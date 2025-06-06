@@ -25,6 +25,7 @@ services:
       dockerfile: ./Dockerfile
       target: run
     container_name: frontend-run
+    image: frontend-run:latest
     profiles: ["deploy"]
     restart: unless-stopped
     ports:
