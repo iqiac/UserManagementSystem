@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../user';
@@ -14,12 +14,9 @@ import { UserService } from '../user.service';
 export class UserFormComponent implements OnInit {
   user: User = { id: undefined, name: '', email: '' };
   isEditMode = false;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {}
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
