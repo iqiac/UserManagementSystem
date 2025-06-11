@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build image
-        run: docker compose build --no-cache backend-run
+        run: docker compose --profile deploy build --no-cache backend-run
 
       - name: Save image
         run: docker save -o backend-run.tar backend-run
