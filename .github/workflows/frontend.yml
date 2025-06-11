@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: "22"
 
-
       - name: Clean install dependencies
         working-directory: frontend
         run: npm ci

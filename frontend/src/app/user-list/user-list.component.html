@@ -24,7 +24,18 @@
             >
               Edit
             </button>
-            <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id)">
+            <button
+              class="btn btn-danger btn-sm position-relative overflow-hidden"
+              (mousedown)="onDeleteHoldStart(user.id)"
+              (mouseup)="onDeleteHoldEnd()"
+              (mouseleave)="onDeleteHoldEnd()"
+            >
+              <span
+                *ngIf="loadUserId === user.id"
+                class="loading-bar"
+                [style.width.%]="progress"
+              ></span>
+              <span class="position-relative" style="z-index: 2"></span>
               Delete
             </button>
           </td>

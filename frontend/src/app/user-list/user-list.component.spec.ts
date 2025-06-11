@@ -1,12 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 
+import { tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { User } from '../user';
 import { UserService } from '../user.service';
 import { UserListComponent } from './user-list.component';
 
-describe('UserComponent', () => {
+describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
@@ -48,6 +49,52 @@ describe('UserComponent', () => {
 
       expect(mockUserService.getUsers).toHaveBeenCalled();
       expect(component.users).toEqual(usersMock);
+    });
+  });
+
+  describe('onDeleteHoldStart', () => {
+    it('should initialize progress and loadUserId on hold start', () => {
+      component.onDeleteHoldStart(42);
+
+      expect(component.loadUserId).toBe(42);
+      expect(component.progress).toBe(0);
+      expect(component.progressInterval).toBeDefined();
+      expect(component.holdTimeout).toBeDefined();
+      component.onDeleteHoldEnd(); // Clean up after test
+    });
+
+    it('should increment progress every 50ms', fakeAsync(() => {
+      component.onDeleteHoldStart(42);
+      tick(100); // Simulate 2 intervals passing
+
+      expect(component.progress).toBe(4); // 2% progress after 100ms
+      component.onDeleteHoldEnd(); // Clean up after test
+    }));
+
+    it('should call deleteUser after 2 seconds', fakeAsync(() => {
+      mockUserService.deleteUser.and.returnValue(of(undefined));
+      mockUserService.getUsers.and.returnValue(of([]));
+
+      component.onDeleteHoldStart(42);
+      tick(2000); // Simulate 2 seconds passing
+
+      expect(mockUserService.deleteUser).toHaveBeenCalledWith(42);
+      expect(component.progress).toBe(0);
+      expect(component.loadUserId).toBeUndefined();
+      component.onDeleteHoldEnd(); // Clean up after test
+    }));
+  });
+
+  describe('onDeleteHoldEnd', () => {
+    it('should clean up timers and reset state on hold end', () => {
+      component.onDeleteHoldStart(42);
+
+      component.onDeleteHoldEnd();
+
+      expect(component.loadUserId).toBeUndefined();
+      expect(component.progressInterval).toBeUndefined();
+      expect(component.holdTimeout).toBeUndefined();
+      expect(component.progress).toBe(0);
     });
   });
 
